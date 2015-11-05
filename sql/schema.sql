@@ -51,6 +51,6 @@ create table if not exists `Orders` (
 	`order_date`	datetime not null default now(),
 	`copies`		int not null,
 	`order_status`	varchar(256),
-	foreign key (`userID`) references `Customers` (`id`) on update cascade on delete no action,
-	foreign key (`book`) references `Books` (`ISBN`) on update cascade on delete no action
+	foreign key (`userID`) references `Customers` (`id`) on update cascade,
+	foreign key (`book`) references `Books` (`ISBN`) on update cascade
 );
