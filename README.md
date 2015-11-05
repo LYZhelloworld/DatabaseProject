@@ -6,3 +6,4 @@
 * Created repo.
 * Created readme.
 * Uploaded SQL schema file.
+* Added order_status column to Orders table.
