@@ -50,6 +50,7 @@ create table if not exists Orders (
 	book		char(14) not null,
 	order_date	datetime not null default now(),
 	copies		int not null,
+	order_status	varchar(256),
 	foreign key (userID) references Customers(id) on update cascade on delete restrict
 	foreign key (book) references Books(ISBN) on update cascade on delete restrict
 );
