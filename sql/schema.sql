@@ -1,5 +1,5 @@
 create table if not exists `Books` (
-	`ISBN`		char(14) not null unique primary key,
+	`ISBN`		char(14) primary key,
 	`title`		varchar(256) not null,
 	`authors`	varchar(256),
 	`publisher`	varchar(256),
@@ -12,7 +12,7 @@ create table if not exists `Books` (
 );
 
 create table if not exists `Customers` (
-	`id`		int not null auto_increment primary key,
+	`id`		int auto_increment primary key,
 	`name`		varchar(64) not null,
 	`loginname`	varchar(64) not null unique,
 	`password`	varchar(64) not null,
@@ -28,8 +28,8 @@ create table if not exists `Opinions` (
 	`feedback`		varchar(256),
 	`feedback_date`	datetime not null default now(),	
 	primary key (`userID`, `book`),
-	foreign key (`userID`) references `Customers` (`id`),
-	foreign key (`book`) references `Books` (`ISBN`)
+	foreign key (`userID`) references `Customers` (`id`) on update cascade on delete cascade,
+	foreign key (`book`) references `Books` (`ISBN`) on update cascade on delete cascade
 );
 
 create table if not exists `Rate` (
@@ -39,18 +39,18 @@ create table if not exists `Rate` (
 	`rated_by`	int not null,
 	check (`userID` <> `rated_by`),
 	primary key (`userID`, `book`, `rated_by`),
-	foreign key (`userID`) references `Customers` (`id`),
-	foreign key (`book`) references `Books` (`ISBN`),
-	foreign key (`rated_by`) references `Customers` (`id`)
+	foreign key (`userID`) references `Customers` (`id`) on update cascade on delete cascade,
+	foreign key (`book`) references `Books` (`ISBN`) on update cascade on delete cascade,
+	foreign key (`rated_by`) references `Customers` (`id`) on update cascade on delete cascade
 );
 
 create table if not exists `Orders` (
-	`orderID`		int not null auto_increment primary key,
+	`orderID`		int auto_increment primary key,
 	`userID`		int not null,
 	`book`			char(14) not null,
 	`order_date`	datetime not null default now(),
 	`copies`		int not null,
 	`order_status`	varchar(256),
-	foreign key (`userID`) references `Customers` (`id`),
-	foreign key (`book`) references `Books` (`ISBN`)
+	foreign key (`userID`) references `Customers` (`id`) on update cascade on delete no action,
+	foreign key (`book`) references `Books` (`ISBN`) on update cascade on delete no action
 );
