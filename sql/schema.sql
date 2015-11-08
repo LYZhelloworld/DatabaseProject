@@ -54,3 +54,8 @@ create table if not exists `Orders` (
 	foreign key (`userID`) references `Customers` (`id`) on update cascade,
 	foreign key (`book`) references `Books` (`ISBN`) on update cascade
 );
+
+create table if not exists `Admin` (
+	`username`		varchar(64) primary key,
+	`password`		varchar(64) not null
+);
