@@ -4,6 +4,7 @@
 ## Updates
 ### 20151108
 * Added Admin table
+* Created website skeleton
 
 ### 20151105
 * Created repo.
