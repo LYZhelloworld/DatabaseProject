@@ -2,6 +2,9 @@
 50.008 Database Project
 
 ## Updates
+### 20151110
+* Modified schema to make it more reasonable
+
 ### 20151108
 * Added Admin table
 * Created website skeleton

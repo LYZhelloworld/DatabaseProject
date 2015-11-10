@@ -12,9 +12,8 @@ create table if not exists `Books` (
 );
 
 create table if not exists `Customers` (
-	`id`		int auto_increment primary key,
 	`name`		varchar(64) not null,
-	`loginname`	varchar(64) not null unique,
+	`loginname`	varchar(64) primary key,
 	`password`	varchar(64) not null,
 	`credit`	char(16),
 	`address`	varchar(256),
@@ -22,36 +21,43 @@ create table if not exists `Customers` (
 );
 
 create table if not exists `Opinions` (
-	`userID`		int not null,
+	`user`			int not null,
 	`book`			char(14) not null,
 	`score`			int not null check(`score` >= 1 and `score` <= 10),
 	`feedback`		varchar(256),
 	`feedback_date`	datetime not null default now(),	
-	primary key (`userID`, `book`),
-	foreign key (`userID`) references `Customers` (`id`) on update cascade on delete cascade,
+	primary key (`user`, `book`),
+	foreign key (`user`) references `Customers` (`loginname`) on update cascade on delete cascade,
 	foreign key (`book`) references `Books` (`ISBN`) on update cascade on delete cascade
 );
 
 create table if not exists `Rate` (
-	`userID`	int not null,
+	`user`	int not null,
 	`book`		char(14) not null,
 	`rating`	int not null check(`rating` >= 0 and `rating` <= 2), -- 0 for useless, 2 for very useful
 	`rated_by`	int not null,
-	check (`userID` <> `rated_by`),
-	primary key (`userID`, `book`, `rated_by`),
-	foreign key (`userID`) references `Customers` (`id`) on update cascade on delete cascade,
-	foreign key (`book`) references `Books` (`ISBN`) on update cascade on delete cascade,
-	foreign key (`rated_by`) references `Customers` (`id`) on update cascade on delete cascade
+	check (`user` <> `rated_by`),
+	primary key (`user`, `book`, `rated_by`),
+	foreign key (`user`) references `Opinions` (`user`) on update cascade on delete cascade,
+	foreign key (`book`) references `Opinions` (`book`) on update cascade on delete cascade,
+	foreign key (`rated_by`) references `Customers` (`loginname`) on update cascade on delete cascade
 );
 
 create table if not exists `Orders` (
 	`orderID`		int auto_increment primary key,
-	`userID`		int not null,
-	`book`			char(14) not null,
+	`user`			int not null,
 	`order_date`	datetime not null default now(),
-	`copies`		int not null,
 	`order_status`	varchar(256),
-	foreign key (`userID`) references `Customers` (`id`) on update cascade,
+	foreign key (`user`) references `Customers` (`loginname`) on update cascade,
+	foreign key (`book`) references `Books` (`ISBN`) on update cascade
+);
+
+create table if not exists `OrderBooks` (
+	`orderID`		int not null,
+	`book`			char(14) not null,
+	`copies`		int not null,
+	primary key (`orderID`, `book`),
+	foreign key (`orderID`) references `Orders` (`orderID`) on delete cascade,
 	foreign key (`book`) references `Books` (`ISBN`) on update cascade
 );
 
