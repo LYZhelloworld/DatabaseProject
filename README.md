@@ -4,6 +4,8 @@
 ## Updates
 ### 20151110
 * Modified schema to make it more reasonable
+* Testing PHP functionality... OK
+* Testing MySQL connection in PHP... OK
 
 ### 20151108
 * Added Admin table
