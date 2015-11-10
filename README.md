@@ -6,6 +6,7 @@
 * Modified schema to make it more reasonable
 * Testing PHP functionality... OK
 * Testing MySQL connection in PHP... OK
+* Finished index.php
 
 ### 20151108
 * Added Admin table

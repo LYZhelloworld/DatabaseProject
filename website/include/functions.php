@@ -2,7 +2,7 @@
 function checkAuth() {
 	if(!isset($_SESSION["login"]))
 		return FALSE;
-	if($_SESSION["login"] != TRUE)
+	if($_SESSION["login"] == "")
 		return FALSE;
 	return TRUE;
 }
