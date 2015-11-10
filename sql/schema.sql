@@ -21,35 +21,34 @@ create table if not exists `Customers` (
 );
 
 create table if not exists `Opinions` (
-	`user`			int not null,
+	`user`			varchar(64) not null,
 	`book`			char(14) not null,
 	`score`			int not null check(`score` >= 1 and `score` <= 10),
 	`feedback`		varchar(256),
 	`feedback_date`	datetime not null default now(),	
 	primary key (`user`, `book`),
-	foreign key (`user`) references `Customers` (`loginname`) on update cascade on delete cascade,
-	foreign key (`book`) references `Books` (`ISBN`) on update cascade on delete cascade
+	foreign key (`user`) references `Customers` (`loginname`) on delete cascade on update cascade,
+	foreign key (`book`) references `Books` (`ISBN`) on delete cascade on update cascade
 );
 
 create table if not exists `Rate` (
-	`user`	int not null,
+	`user`		varchar(64) not null,
 	`book`		char(14) not null,
 	`rating`	int not null check(`rating` >= 0 and `rating` <= 2), -- 0 for useless, 2 for very useful
-	`rated_by`	int not null,
+	`rated_by`	varchar(64) not null,
 	check (`user` <> `rated_by`),
 	primary key (`user`, `book`, `rated_by`),
-	foreign key (`user`) references `Opinions` (`user`) on update cascade on delete cascade,
-	foreign key (`book`) references `Opinions` (`book`) on update cascade on delete cascade,
-	foreign key (`rated_by`) references `Customers` (`loginname`) on update cascade on delete cascade
+	foreign key (`user`) references `Opinions` (`user`) on delete cascade on update cascade,
+	foreign key (`book`) references `Opinions` (`book`) on delete cascade on update cascade,
+	foreign key (`rated_by`) references `Customers` (`loginname`) on delete cascade on update cascade
 );
 
 create table if not exists `Orders` (
 	`orderID`		int auto_increment primary key,
-	`user`			int not null,
+	`user`			varchar(64) not null,
 	`order_date`	datetime not null default now(),
 	`order_status`	varchar(256),
-	foreign key (`user`) references `Customers` (`loginname`) on update cascade,
-	foreign key (`book`) references `Books` (`ISBN`) on update cascade
+	foreign key (`user`) references `Customers` (`loginname`) on update cascade
 );
 
 create table if not exists `OrderBooks` (
