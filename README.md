@@ -2,6 +2,9 @@
 50.008 Database Project
 
 ## Updates
+### 20151111
+* Added login function
+
 ### 20151110
 * Modified schema to make it more reasonable
 * Testing PHP functionality... OK
