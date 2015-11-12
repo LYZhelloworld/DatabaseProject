@@ -13,8 +13,8 @@ if(getarg("usn") == null or getarg("pwd") == null):
 <form action="login.php" method="post">
 <table>
 <tbody>
-<tr><td>Username</td><td><input type="text" name="usn" /></td></tr>
-<tr><td>Password</td><td><input type="password" name="pwd" /></td></tr>
+<tr><td>Username</td><td><input type="text" name="usn" required maxlength="64" /></td></tr>
+<tr><td>Password</td><td><input type="password" name="pwd" required maxlength="64" /></td></tr>
 <tr><td colspan="2"><input type="submit" /><input type="reset" /></td></tr>
 </tbody>
 </table>
@@ -33,8 +33,8 @@ else:
 <form action="login.php" method="post">
 <table>
 <tbody>
-<tr><td>Username</td><td><input type="text" name="usn" /></td></tr>
-<tr><td>Password</td><td><input type="password" name="pwd" /></td></tr>
+<tr><td>Username</td><td><input type="text" name="usn" required maxlength="64" /></td></tr>
+<tr><td>Password</td><td><input type="password" name="pwd" required maxlength="64" /></td></tr>
 <tr><td colspan="2"><input type="submit" /><input type="reset" /></td></tr>
 </tbody>
 </table>
@@ -42,12 +42,7 @@ else:
 <p>Invalid username or password.</p>
 <?php
 	else:
-		$stmt = $conn->prepare("SELECT `name` FROM `customers` WHERE `loginname`=?;");
-		$stmt->bind_param("s", getarg("usn"));
-		$stmt->execute();
-		$stmt->bind_result($name);
-		$stmt->fetch();
-		auth($name);
+		auth(getarg("usn"));
 		$conn->close();
 		header("Location: index.php");
 		die();

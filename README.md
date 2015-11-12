@@ -2,6 +2,10 @@
 50.008 Database Project
 
 ## Updates
+### 20151112
+* Added register function
+* Fixed bugs in login and index page
+
 ### 20151111
 * Added login function
 

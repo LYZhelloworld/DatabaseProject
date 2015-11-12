@@ -10,7 +10,15 @@ page_header("Index");
 <?php
 if(checkAuth()):
 ?>
-<p>Hello, <?php echo $_SESSION["login"]; ?>.</p>
+<p>Hello, <?php
+$stmt = $conn->prepare("SELECT `name` FROM `customers` WHERE `loginname`=?;");
+$stmt->bind_param("s", $_SESSION["login"]);
+$stmt->execute();
+$stmt->bind_result($name);
+$stmt->fetch();
+$stmt->close();
+echo $name;
+?>.</p>
 <p><a href="books/">Books</a> | <a href="user/">User</a> | <a href="logout.php">Logout</a></p>
 <?php
 else:

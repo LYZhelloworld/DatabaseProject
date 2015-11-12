@@ -34,6 +34,8 @@ function logout() {
 function getarg($argname) {
 	if(!isset($_REQUEST[$argname])) {
 		return null;
+	} elseif($_REQUEST[$argname] == "") {
+		return null;
 	} else {
 		return $_REQUEST[$argname];
 	}
