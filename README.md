@@ -2,6 +2,9 @@
 50.008 Database Project
 
 ## Updates
+### 20151113
+* Added all pages under Users
+
 ### 20151112
 * Added register function
 * Fixed bugs in login and index page
