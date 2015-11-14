@@ -2,6 +2,9 @@
 50.008 Database Project
 
 ## Updates
+### 20151114
+* Added all pages under Books
+
 ### 20151113
 * Added all pages under Users
 
