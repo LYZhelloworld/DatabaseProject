@@ -51,6 +51,22 @@ if(getarg("purchase") == null) {
 ?>
 <p>Book has been added to cart. <a href="#" onclick="window.history.back();return false;">Back</a></p>
 <?php
+	$stmt = $conn->prepare("SELECT `Books`.`title`, `Books`.`ISBN` FROM `Books` WHERE `Books`.`ISBN` IN (SELECT `Orderbooks`.`book` FROM `Orderbooks` WHERE `Orderbooks`.`orderID` IN (SELECT `Orderbooks`.`orderID` FROM `Orderbooks` WHERE `book`=?) AND `Orderbooks`.`book`<>?) ORDER BY (SELECT AVG(`Opinions`.`score`) FROM `Opinions` WHERE `Opinions`.`book`=`Books`.`ISBN`) DESC LIMIT 5;");
+	$stmt->bind_param("ss", getarg("purchase"));
+	$stmt->execute();
+	$stmt->store_result();
+	if($stmt->num_rows > 0) {
+?>
+<p>You may also be interested in these books:</p>
+<?php
+		$stmt->bind_result($book_title, $book_isbn);
+		while($stmt->fetch()) {
+?>
+<p><a href="index.php?isbn=<?php echo urlencode($book_isbn); ?>"><?php echo $book_title; ?></a></p>
+<?php
+		}
+	}
+	$stmt->close();
 }
 $conn->close();
 page_footer();

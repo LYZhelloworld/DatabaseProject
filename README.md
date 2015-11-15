@@ -2,6 +2,10 @@
 50.008 Database Project
 
 ## Updates
+### 20151115
+* Added book recommendation function
+* Added Admin functions
+
 ### 20151114
 * Added all pages under Books
 
