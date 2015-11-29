@@ -13,7 +13,7 @@ if(!checkAuth()) {
 
 page_header("Rate");
 ?>
-<p><a href="index.php">Books</a> | <a href="search.php">Search</a> | <a href="../index.php">Back</a></p>
+<p><a href="index.php">Books</a> | <a href="search.php">Search</a><?php if(checkAdminAuth()) {?> | <a href="../admin/index.php">Back</a><?php } else {?> | <a href="../index.php">Back</a><?php } ?></p>
 <hr/>
 <?php
 if(getarg("book") == null or getarg("rating") == null or getarg("user") == null) {

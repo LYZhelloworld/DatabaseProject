@@ -13,7 +13,7 @@ if(!checkAuth()) {
 
 page_header("Search");
 ?>
-<p><a href="index.php">Books</a> | <a href="search.php">Search</a> | <a href="../index.php">Back</a></p>
+<p><a href="index.php">Books</a> | <a href="search.php">Search</a><?php if(checkAdminAuth()) {?> | <a href="../admin/index.php">Back</a><?php } else {?> | <a href="../index.php">Back</a><?php } ?></p>
 <hr/>
 <?php
 if(getarg("sort") == null or getarg("andor") == null) {
@@ -35,7 +35,7 @@ if(getarg("sort") == null or getarg("andor") == null) {
 		$conj = "AND";
 	}
 	if(getarg("sort") == "score") {
-		$orderstring = "(SELECT AVG(`Opinions`.`score`) FROM `Opinions` WHERE `Opinions`.`book`=`Books`.`ISBN`) DESC;";
+		$orderstring = "`AvgScore` DESC;";
 	} else {
 		$orderstring = "`Books`.`year` DESC;";
 	}
@@ -43,16 +43,16 @@ if(getarg("sort") == null or getarg("andor") == null) {
 	$authors_value = "%" . (getarg("authors")==null?"":getarg("authors")) . "%";
 	$publisher_value = "%" . (getarg("publisher")==null?"":getarg("publisher")) . "%";
 	$subject_value = "%" . (getarg("subject")==null?"":getarg("subject")) . "%";
-	$sql = "SELECT `Books`.`title`, `Books`.`ISBN` FROM `Books` WHERE `Books`.`title` LIKE ? " . $conj . "`Books`.`authors` LIKE ? " . $conj . "`Books`.`publisher` LIKE ? " . $conj . "`Books`.`subject` LIKE ? ORDER BY " . $orderstring;
+	$sql = "SELECT `Books`.`title`, `Books`.`ISBN`, (SELECT ROUND(AVG(`Opinions`.`score`),2) FROM `Opinions` WHERE `Opinions`.`book`=`Books`.`ISBN`) AS `AvgScore` FROM `Books` WHERE `Books`.`title` LIKE ? " . $conj . "`Books`.`authors` LIKE ? " . $conj . "`Books`.`publisher` LIKE ? " . $conj . "`Books`.`subject` LIKE ? ORDER BY " . $orderstring;
 	$stmt = $conn->prepare($sql);
 	$stmt->bind_param("ssss", $title_value, $authors_value, $publisher_value, $subject_value);
 	$stmt->execute();
-	$stmt->bind_result($title, $isbn);
+	$stmt->bind_result($title, $isbn, $avg_score);
 	$get_results = FALSE;
 	while($stmt->fetch()) {
 		$get_results = TRUE;
 ?>
-<p><a href="index.php?isbn=" . <?php echo $isbn; ?> target="_blank"><?php echo $title; ?></a></p>
+<p><a href="index.php?isbn=<?php echo $isbn; ?>" target="_blank"><?php echo $title; ?></a><?php if(getarg("sort") == "score" and $avg_score != null) { ?> (<?php echo $avg_score; ?>)<?php } ?></p>
 <?php
 	}
 	if(!$get_results) {

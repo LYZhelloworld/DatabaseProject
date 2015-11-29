@@ -22,7 +22,7 @@ $stmt->execute();
 $stmt->bind_result($book_title, $book_isbn);
 while($stmt->fetch()) {
 ?>
-<p><a href="index.php?isbn=<?php echo urlencode($book_isbn); ?>"><?php echo $book_title; ?></a></p>
+<p><a href="../books/index.php?isbn=<?php echo urlencode($book_isbn); ?>"><?php echo $book_title; ?></a></p>
 <?php
 }
 $stmt->close();

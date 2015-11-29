@@ -13,7 +13,7 @@ if(!checkAuth()) {
 
 page_header("Books");
 ?>
-<p><a href="index.php">Books</a> | <a href="search.php">Search</a> | <a href="../index.php">Back</a></p>
+<p><a href="index.php">Books</a> | <a href="search.php">Search</a><?php if(checkAdminAuth()) {?> | <a href="../admin/index.php">Back</a><?php } else {?> | <a href="../index.php">Back</a><?php } ?></p>
 <hr/>
 <?php
 if(getarg("isbn") == null) {
@@ -54,7 +54,11 @@ if(getarg("isbn") == null) {
 <p>Keywords: <?php echo $keywords; ?></p>
 <p>Subject: <?php echo $subject; ?></p>
 <p><?php echo $copies; ?> copies available now</p>
-<p><a href="order.php?purchase=<?php echo urlencode(getarg("isbn")); ?>" >Purchase</a></p>
+<p><form action="order.php" method="post">
+<input type="hidden" name="purchase" value="<?php echo getarg("isbn"); ?>" />
+<input type="number" name="copies" value="1" min="1" />
+<input type="submit" value="Purchase" />
+</form></p>
 <hr/>
 <p>Your feedback on this book</p>
 <?php
@@ -90,9 +94,10 @@ if(getarg("isbn") == null) {
 <hr/>
 <p>Other people's feedback</p>
 <?php
-	$stmt = $conn->prepare("SELECT `Customers`.`name`, `Opinions`.`user`, `Opinions`.`score`, `Opinions`.`feedback`, `Opinions`.`feedback_date` FROM `Opinions` WHERE `Opinions`.`user`=`Customers`.`loginname` AND `Opinions`.`user`<>? AND `book`=? ORDER BY `Opinions`.`feedback_date` DESC LIMIT 10;");
+	$stmt = $conn->prepare("SELECT `Customers`.`name`, `Opinions`.`user`, `Opinions`.`score`, `Opinions`.`feedback`, `Opinions`.`feedback_date` FROM `Customers`, `Opinions` WHERE `Opinions`.`user`=`Customers`.`loginname` AND `Opinions`.`user`<>? AND `Opinions`.`book`=? ORDER BY `Opinions`.`feedback_date` DESC LIMIT 10;");
 	$stmt->bind_param("ss", $_SESSION["login"], getarg("isbn"));
 	$stmt->execute();
+	$stmt->store_result();
 	$stmt->bind_result($name, $loginname, $score, $feedback, $feedback_date);
 	while($stmt->fetch()) {
 		$stmt2 = $conn->prepare("SELECT `rating` FROM `Rate` WHERE `user`=? AND `book`=? AND rated_by=?");

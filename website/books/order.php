@@ -13,7 +13,7 @@ if(!checkAuth()) {
 
 page_header("Order");
 ?>
-<p><a href="index.php">Books</a> | <a href="search.php">Search</a> | <a href="../index.php">Back</a></p>
+<p><a href="index.php">Books</a> | <a href="search.php">Search</a><?php if(checkAdminAuth()) {?> | <a href="../admin/index.php">Back</a><?php } else {?> | <a href="../index.php">Back</a><?php } ?></p>
 <hr/>
 <?php
 if(getarg("purchase") == null) {
@@ -31,7 +31,7 @@ if(getarg("purchase") == null) {
 		$orderid = $conn->insert_id;
 		$stmt->close();
 		foreach($_SESSION["cart"] as $book=>$copies) {
-			$stmt = $conn->prepare("INSERT INTO `Orderbooks` (`orderID`, `book`, `copies`);");
+			$stmt = $conn->prepare("INSERT INTO `Orderbooks` (`orderID`, `book`, `copies`) VALUES (?, ?, ?);");
 			$stmt->bind_param("isi", $orderid, $book, $copies);
 			$stmt->execute();
 			$stmt->close();
@@ -47,12 +47,16 @@ if(getarg("purchase") == null) {
 	if(!isset($_SESSION["cart"][getarg("purchase")])) {
 		$_SESSION["cart"][getarg("purchase")] = 0;
 	}
-	$_SESSION["cart"][getarg("purchase")]++;
+	if(getarg("copies") == null) {
+		$_SESSION["cart"][getarg("purchase")]++;
+	} else {
+		$_SESSION["cart"][getarg("purchase")] += getarg("copies");
+	}
 ?>
-<p>Book has been added to cart. <a href="#" onclick="window.history.back();return false;">Back</a></p>
+<p><?php if(getarg("copies") == null) echo "1"; else echo getarg("copies"); ?> book(s) have been added to cart. <a href="#" onclick="window.history.back();return false;">Back</a></p>
 <?php
-	$stmt = $conn->prepare("SELECT `Books`.`title`, `Books`.`ISBN` FROM `Books` WHERE `Books`.`ISBN` IN (SELECT `Orderbooks`.`book` FROM `Orderbooks` WHERE `Orderbooks`.`orderID` IN (SELECT `Orderbooks`.`orderID` FROM `Orderbooks` WHERE `book`=?) AND `Orderbooks`.`book`<>?) ORDER BY (SELECT AVG(`Opinions`.`score`) FROM `Opinions` WHERE `Opinions`.`book`=`Books`.`ISBN`) DESC LIMIT 5;");
-	$stmt->bind_param("ss", getarg("purchase"));
+	$stmt = $conn->prepare("SELECT `Books`.`title`, `Books`.`ISBN` FROM `Books` WHERE `Books`.`ISBN` IN (SELECT `Orderbooks`.`book` FROM `Orderbooks` WHERE `Orderbooks`.`orderID` IN (SELECT `Orderbooks`.`orderID` FROM `Orderbooks` WHERE `Orderbooks`.`book`=?) AND `Orderbooks`.`book`<>?) ORDER BY (SELECT AVG(`Opinions`.`score`) FROM `Opinions` WHERE `Opinions`.`book`=`Books`.`ISBN`) DESC LIMIT 5;");
+	$stmt->bind_param("ss", getarg("purchase"), getarg("purchase"));
 	$stmt->execute();
 	$stmt->store_result();
 	if($stmt->num_rows > 0) {

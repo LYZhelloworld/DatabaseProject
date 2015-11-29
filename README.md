@@ -4,6 +4,7 @@
 ## Updates
 ### 20151129
 * Added UTF-8 encoding support
+* Bugs fixed.
 
 ### 20151115
 * Added book recommendation function

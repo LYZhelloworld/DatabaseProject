@@ -19,7 +19,7 @@ page_header("Arrival of more copies");
 if(getarg("isbn") == null) {
 ?>
 <form action="addcopies.php" method="post">
-<p>ISBN <input type="text" maxlength="14" /><input type="submit" value="Search" /></p>
+<p>ISBN <input type="text" maxlength="14" name="isbn" /><input type="submit" value="Search" /></p>
 </form>
 <?php
 } elseif(getarg("copies") == null) {
@@ -30,17 +30,17 @@ if(getarg("isbn") == null) {
 	if($stmt->fetch()) {
 ?>
 <form action="addcopies.php" method="post">
-<p>ISBN <input type="text" maxlength="14" value="<?php echo getarg("isbn"); ?>" /><input type="submit" value="Search" /></p>
+<p>ISBN <input type="text" maxlength="14" value="<?php echo getarg("isbn"); ?>" name="isbn" /><input type="submit" value="Search" /></p>
 </form>
 <form action="addcopies.php" method="post">
-<input type="hidden" value="<?php echo getarg("isbn"); ?>" />
-<p>Copies <input type="number" min="<?php echo $copies; ?>" name="copies" /><input type="submit" value="Add" /></p>
+<input type="hidden" value="<?php echo getarg("isbn"); ?>" name="isbn" />
+<p>Copies <input type="number" value="<?php echo $copies; ?>" min="<?php echo $copies; ?>" name="copies" /><input type="submit" value="Change" /></p>
 </form>
 <?php
 	} else {
 ?>
 <form action="addcopies.php" method="post">
-<p>ISBN <input type="text" maxlength="14" /><input type="submit" value="Search" /></p>
+<p>ISBN <input type="text" maxlength="14" name="isbn" /><input type="submit" value="Search" /></p>
 </form>
 <p>Specific book does not exist.</p>
 <?php
@@ -48,18 +48,18 @@ if(getarg("isbn") == null) {
 	$stmt->close();
 } else {
 	$stmt = $conn->prepare("UPDATE `Books` SET `copies`=? WHERE `ISBN`=?;");
-	$stmt->bind_param("is", getarg("isbn"), getarg("copies"));
+	$stmt->bind_param("is", getarg("copies"), getarg("isbn"));
 	if($stmt->execute()) {
 ?>
 <form action="addcopies.php" method="post">
-<p>ISBN <input type="text" maxlength="14" /><input type="submit" value="Search" /></p>
+<p>ISBN <input type="text" maxlength="14" name="isbn" /><input type="submit" value="Search" /></p>
 </form>
 <p>Record has been updated successfully.</p>
 <?php
 	} else {
 ?>
 <form action="addcopies.php" method="post">
-<p>ISBN <input type="text" maxlength="14" /><input type="submit" value="Search" /></p>
+<p>ISBN <input type="text" maxlength="14" name="isbn" /><input type="submit" value="Search" /></p>
 </form>
 <p>Failed to update records. This may be because of invalid arguments passed or database error.</p>
 <?php

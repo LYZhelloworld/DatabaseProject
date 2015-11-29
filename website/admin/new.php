@@ -21,16 +21,17 @@ page_header("Add new book");
 <p>Authors: <input type="text" maxlength="256" name="authors" /></p>
 <p>Publisher: <input type="text" maxlength="256" name="publisher" /></p>
 <p>Year: <input type="number" name="year" /></p>
-<p>Price: <input type="number" name="price" step="0.01" min="0" /></p>
+<p>Price: <input type="number" name="price" step="0.01" min="0" value="0.00" /></p>
 <p>Format: <select name="format"><option value="hardcover" selected>Hardcover</option><option value="softcover">Softcover</option></select></p>
 <p>Keywords: <input type="text" name="keywords" maxlength="64" /></p>
 <p>Subject: <input type="text" name="subject" maxlength="64" /></p>
+<p>Copies: <input type="number" name="copies" min="0" value="0" /></p>
 <p><input type="submit" /><input type="reset" /></p>
 </form>
 <?php
 if(getarg("isbn") != null or getarg("title") != null or getarg("format") != null) {
-	$stmt = $conn->prepare("INSERT INTO `Books` (`ISBN`, `title`, `authors`, `publisher`, `year`, `copies`, `price`, `format`, `keywords`, `subject`) VALUES (?,?,?,?,?,0,?,?,?,?);");
-	$stmt->bind_param("ssssidsss", getarg("isbn"), getarg("title"), getarg("authors"), getarg("publisher"), getarg("year"), getarg("price"), getarg("format"), getarg("keywords"), getarg("subject"));
+	$stmt = $conn->prepare("INSERT INTO `Books` (`ISBN`, `title`, `authors`, `publisher`, `year`, `copies`, `price`, `format`, `keywords`, `subject`) VALUES (?,?,?,?,?,?,?,?,?,?);");
+	$stmt->bind_param("ssssiidsss", getarg("isbn"), getarg("title"), getarg("authors"), getarg("publisher"), getarg("year"), getarg("copies"), getarg("price"), getarg("format"), getarg("keywords"), getarg("subject"));
 	if($stmt->execute()) {
 ?>
 <p>New book has been added successfully.</p>

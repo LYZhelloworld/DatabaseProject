@@ -63,6 +63,7 @@ else:
 <?php
 endif;
 ?>
+<p><a href="index.php">Back</a></p>
 <?php
 page_footer();
 

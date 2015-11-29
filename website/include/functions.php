@@ -29,6 +29,7 @@ function adminAuth($usn) {
 function logout() {
 	unset($_SESSION["login"]);
 	unset($_SESSION["admin"]);
+	unset($_SESSION["cart"]);
 }
 
 function getarg($argname) {
