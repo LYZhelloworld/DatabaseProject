@@ -2,6 +2,9 @@
 50.008 Database Project
 
 ## Updates
+### 20151129
+* Added UTF-8 encoding support
+
 ### 20151115
 * Added book recommendation function
 * Added Admin functions
